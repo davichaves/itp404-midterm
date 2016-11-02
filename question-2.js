@@ -8,6 +8,11 @@
 function filterUsersByState(users, state) {
   // your implementation here using .filter() on the users array
   // return an array of users filtered by the 'state' variable
+  return users.filter(function(user) {
+    if (user.address.state == state) {
+      return user
+    }
+  });
 }
 
 var users = [
