@@ -17,6 +17,12 @@ var users = [
 
 function normalize() {
   // your implementation
+  return users.map(function(item, index) {
+    return {
+      firstName: item.first_name,
+      lastName: item.last_name
+    }
+  });
 }
 
 var normalizedUsers = normalize(users);
