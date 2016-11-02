@@ -6,6 +6,10 @@
 </head>
 <body>
 
+<form>
+  <input type="button" id="theButton" value="submit"/>
+</form>
+
 <script src="jquery-3.1.1.js"></script>
 <script src="handlebars-v4.0.5.js"></script>
 <script>
@@ -16,7 +20,52 @@
   // to the name.
   // Dont forget to run a local server when building this.
   // cd into this directory and run php -S localhost:8000 and navigate to localhost:8000/question-1.html
+  function getProfile() {
+    var promise = $.ajax({
+      url: 'http://itp-api.herokuapp.com/api/v1/me',
+      type: 'get'
+    });
+    return promise;
+  }
+
+  var button = document.getElementById("theButton");
+  button.onclick = function() {
+    getProfile().then(function(profile) {
+      console.log(profile.data);
+      var templateSource = $('#profile-template').html();
+      var template = Handlebars.compile(templateSource);
+      var html = template({
+        profiles: profile
+      });
+      $('#profile-list').html(html);
+    }, function() {
+      console.log('there was an error');
+    });
+  }
 </script>
+
+<script type="template/handlebars" id="profile-template">
+  {{#each profiles}}
+    <div class="profile">
+      <span>{{firstName}}&nbsp;{{lastName}}&nbsp;
+      {{#if isAdmin}}
+        Admin
+      {{else}}
+        Not Admin
+      {{/if}}
+      </span>
+    </div>
+    <ul class="project-list">
+      {{#each openSourceProjects}}
+        <li>{{this.name}}</li>
+      {{/each}}
+    </ul>
+  {{else}}
+    <p>Nothing found.</p>
+  {{/each}}
+</script>
+
+<div id="profile-list"></div>
 
 </body>
 </html>
